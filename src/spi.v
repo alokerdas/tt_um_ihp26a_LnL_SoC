@@ -43,7 +43,8 @@ module spi (
     end
   end
 
-  assign cntRst = reset | (cntreg[0] & cntreg[3]);
+//  assign cntRst = reset | (cntreg[0] & cntreg[3]);
+  assign cntRst = reset;
   always @(posedge clock_in or posedge cntRst) begin
     if (cntRst) begin
       cntreg  <= 4'h0;
