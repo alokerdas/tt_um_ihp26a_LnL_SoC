@@ -8,7 +8,8 @@ module tb ();
 
   // Dump the signals to a FST file. You can view it with gtkwave or surfer.
   initial begin
-    $dumpfile("tb.fst");
+    // $dumpfile("tb.fst");
+    $dumpfile("tb.vcd");
     $dumpvars(0, tb);
     #1;
   end
@@ -25,14 +26,6 @@ module tb ();
 
   // Replace tt_um_example with your module name:
   tt_um_LnL_SoC user_project (
-
-     // Include power ports for the Gate Level test:
-/*
-`ifdef GL_TEST
-      .VPWR(1'b1),
-      .VGND(1'b0),
-`endif
-*/
       .ui_in  (ui_in),    // Dedicated inputs
       .uo_out (uo_out),   // Dedicated outputs
       .uio_in (uio_in),   // IOs: Input path
