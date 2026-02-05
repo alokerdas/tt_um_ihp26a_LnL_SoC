@@ -42,7 +42,7 @@ module cpu (
     if (rst) begin
       display <= 0;
     end else if (en_out) begin
-      display <= ac;
+		display <= ac[7:0];
     end
   end
 
