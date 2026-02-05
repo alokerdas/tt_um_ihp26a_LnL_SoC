@@ -23,13 +23,12 @@ module cpu (
   wire [7:0] d;
   wire rstT, clk, drzero, aczero;
 
-
   assign clk = clkin | (~ir[15] & d[7] & t[3] & ir[0]);
-  assign dataout = d[3] & ((ir[15] & t[6]) | (~ir[15] & t[4])) ? ac : 16'hzzzz;
-  assign dataout = (t[4] & d[5]) ? {4'h0, pc} : 16'hzzzz;
-  assign dataout = (d[6] & ((ir[15] & t[6]) | (~ir[15] & t[7]))) ? dr : 16'hzzzz;
-
   assign en_out =   t[3] & d[7] & ir[10] & ir[15];
+
+  assign dataout = (t[4] & d[5]) ? {4'h0, pc} : 16'hzzzz;
+  assign dataout = (d[3] & ((ir[15] & t[6]) | (~ir[15] & t[4]))) ? ac : 16'hzzzz;
+  assign dataout = (d[6] & ((ir[15] & t[6]) | (~ir[15] & t[7]))) ? dr : 16'hzzzz;
 
   DECODER decode2 (
     .d(d),
@@ -39,9 +38,11 @@ module cpu (
 
   assign rstT =  rst | (t[4] & d[7] & ~ir[6] & ~ir[7]) | (~ir[15] & t[5] & d[3]) | (t[5] & d[7] & (ir[6] | ir[7])) | (t[7] & d[4]) | (~ir[15] & t[7] & (d[0] | d[1] | d[2] | d[5])) | (t[7] & d[3]) | (t[9] & (d[0] | d[1] | d[2])) | (t[10] & d[6]);
 
-  always_latch begin
-    if (en_out) begin
-      display = ac[7:0];
+  always @(posedge clk or posedge rst) begin
+    if (rst) begin
+      display <= 0;
+    end else if (en_out) begin
+      display <= ac;
     end
   end
 
