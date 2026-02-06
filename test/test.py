@@ -16,7 +16,7 @@ async def test_cpu (dut):
     dut.intrin.value = 0
     dut._log.info("Testing reset")
     dut.rst_n.value = 0
-    await ClockCycles(dut.clk, 1)
+    await ClockCycles(dut.clk, 3)
     assert dut.ewire.value == 0
     assert dut.twire.value == 1
     assert dut.acwire.value == 0
