@@ -25,7 +25,7 @@ module tt_um_LnL_SoC (
   supply1 plus;
   wire [15:0] data_to_dev, data_to_cpu, boot_to_cpu;
   wire [11:0] addr_to_memio;
-  wire [7:0] spi_to_cpu, uo_out;
+  wire [7:0] spi_to_cpu;
   wire rw_to_mem, load_spi, unload_spi, en_to_spi, en_to_dev, en_to_boot, en_to_timer, en_to_pwm;
 
   assign uio_oe = 8'hFC; // Lower nibble all input, Upper all output
@@ -51,7 +51,7 @@ module tt_um_LnL_SoC (
     .datain(data_to_cpu),
     .dataout(data_to_dev),
     .keyboard(ui_in),
-      .display(uo_out),
+    .display(uo_out),
     .en_inp(uio_in[0]),
     .en_out(uio_out[7]),
     .rdwr(rw_to_mem),
