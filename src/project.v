@@ -51,7 +51,7 @@ module tt_um_LnL_SoC (
     .datain(data_to_cpu),
     .dataout(data_to_dev),
     .keyboard(ui_in),
-      .display(uo_out_display),
+      .display(uo_out),
     .en_inp(uio_in[0]),
     .en_out(uio_out[7]),
     .rdwr(rw_to_mem),
