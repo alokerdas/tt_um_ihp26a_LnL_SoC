@@ -25,11 +25,10 @@ module tt_um_LnL_SoC (
   supply1 plus;
   wire [15:0] data_to_dev, data_to_cpu, boot_to_cpu;
   wire [11:0] addr_to_memio;
-  wire [7:0] spi_to_cpu, uo_out_display;
+  wire [7:0] spi_to_cpu, uo_out;
   wire rw_to_mem, load_spi, unload_spi, en_to_spi, en_to_dev, en_to_boot, en_to_timer, en_to_pwm;
 
-  assign uio_oe = rst_n ? 8'hFC : 8'hFF; // Lower nibble all input, Upper all output
-  assign uo_out = ~rst_n ? ui_in : uo_out_display; // for loopback test
+  assign uio_oe = 8'hFC; // Lower nibble all input, Upper all output
   assign uio_out[1:0] = 2'h0; // uio_out unused bits
 
   assign en_to_spi = |addr_to_memio[11:7] & en_to_dev;
