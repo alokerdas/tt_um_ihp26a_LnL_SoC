@@ -37,13 +37,13 @@ module cpu (
   );
 
   assign rstT =  rst | (t[4] & d[7] & ~ir[6] & ~ir[7]) | (~ir[15] & t[5] & d[3]) | (t[5] & d[7] & (ir[6] | ir[7])) | (t[7] & d[4]) | (~ir[15] & t[7] & (d[0] | d[1] | d[2] | d[5])) | (t[7] & d[3]) | (t[9] & (d[0] | d[1] | d[2])) | (t[10] & d[6]);
-/*
+
   always_latch begin
     if (en_out) begin
       display = ac[7:0];
 	end
   end
-*/
+/*
   always @(posedge clk or posedge rst) begin
     if (rst) begin
 		display <= 0;
@@ -51,7 +51,7 @@ module cpu (
 		display <= ac[7:0];
 	end
   end
-	
+	*/
   // Converted to sync reset to avoid loop errors
   always @(posedge clk) begin
     if (rstT) begin
