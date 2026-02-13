@@ -224,7 +224,7 @@ module bootrom (
   end
   always @ (posedge romclk or posedge rst) begin
     if (rst) begin
-      outbuf1C <= 16'h6091; // ISZ 91 icrement register inside spi
+      outbuf1C <= 16'h6081; // ISZ 81 icrement register inside spi
     end else begin
       outbuf1C <= 16'h0000;
     end
