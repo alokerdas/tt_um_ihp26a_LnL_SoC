@@ -13,7 +13,6 @@ async def test_cpu (dut):
     clock = Clock(dut.clk, 10, units="us")
     cocotb.start_soon(clock.start())
 
-    dut.intrin.value = 0
     dut._log.info("Testing reset")
     dut.rst_n.value = 0
     dut.intrin.value = 0
@@ -170,3 +169,58 @@ async def test_cpu (dut):
     dut._log.info("Testing HLT")
     await ClockCycles(dut.clk, 10)
     assert dut.irwire.value == 28673
+
+@cocotb.test()
+async def test_spi (dut):
+    dut._log.info("Start")
+
+    # Set the clock period to 10 us (100 KHz)
+    clock = Clock(dut.clk, 10, units="us")
+    cocotb.start_soon(clock.start())
+
+    dut._log.info("Testing reset")
+    dut.rst_n.value = 0
+    dut.intrin.value = 0
+    await ClockCycles(dut.clk, 3)
+    assert dut.ewire.value == 0
+    assert dut.twire.value == 1
+    assert dut.acwire.value == 0
+    assert dut.arwire.value == 0
+    assert dut.drwire.value == 0
+    assert dut.irwire.value == 0
+    assert dut.pcwire.value == 0
+
+    await ClockCycles(dut.clk, 1)
+    dut.rst_n.value = 1
+    await ClockCycles(dut.clk, 1)
+    assert dut.uio_oe.value == 252
+    dut._log.info("Testing SPI LOAD")
+    dut._log.info("Testing Initial")
+    await ClockCycles(dut.clk, 1)
+    assert dut.irwire.value == 0
+    await ClockCycles(dut.clk, 8)
+    dut.intrin.value = 1 # This is needed for next SKI
+    await ClockCycles(dut.clk, 8)
+    dut.ui_in.value = 119 # This is needed for next INP
+    await ClockCycles(dut.clk, 23)
+    assert dut.irwire.value == 12432
+    await ClockCycles(dut.clk, 1)
+    assert dut.user_project.en_to_spi.value == 1
+    assert dut.user_project.load_spi.value == 1
+    assert dut.user_project.data_to_dev.value == 136
+    await ClockCycles(dut.clk, 1)
+    assert dut.uio_out.value == 40
+    await ClockCycles(dut.clk, 1)
+    assert dut.uio_out.value == 0
+    await ClockCycles(dut.clk, 1)
+    assert dut.uio_out.value == 8
+    await ClockCycles(dut.clk, 1)
+    assert dut.uio_out.value == 0
+    await ClockCycles(dut.clk, 1)
+    assert dut.uio_out.value == 40
+    await ClockCycles(dut.clk, 1)
+    assert dut.uio_out.value == 0
+    await ClockCycles(dut.clk, 1)
+    assert dut.uio_out.value == 8
+    await ClockCycles(dut.clk, 1)
+    assert dut.uio_out.value == 0
