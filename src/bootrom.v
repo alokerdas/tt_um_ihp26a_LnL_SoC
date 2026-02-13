@@ -62,7 +62,7 @@ module bootrom (
   end
   always @ (posedge romclk or posedge rst) begin
     if (rst) begin
-      outbuf5 <= 16'h3050; // STA 50 -> spi
+      outbuf5 <= 16'h3090; // STA 90 -> spi
     end else begin
       outbuf5 <= 16'h0000;
     end
