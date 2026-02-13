@@ -104,7 +104,7 @@ module bootrom (
   end
   always @ (posedge romclk or posedge rst) begin
     if (rst) begin
-      outbufB <= 16'h0090; // data
+      outbufB <= 16'h00A0; // data
     end else begin
       outbufB <= 16'h0000;
     end
@@ -224,7 +224,7 @@ module bootrom (
   end
   always @ (posedge romclk or posedge rst) begin
     if (rst) begin
-      outbuf1C <= 16'h6091; // ISZ 51 icrement register inside spi
+      outbuf1C <= 16'h6091; // ISZ 91 icrement register inside spi
     end else begin
       outbuf1C <= 16'h0000;
     end

@@ -75,7 +75,7 @@ async def test_cpu (dut):
     await ClockCycles(dut.clk, 4)
     assert dut.irwire.value == 11
     await ClockCycles(dut.clk, 3)
-    assert dut.drwire.value == 128
+    assert dut.drwire.value == 160
     await ClockCycles(dut.clk, 1)
     assert dut.acwire.value == 0
     dut._log.info("Testing SZA")
