@@ -27,7 +27,7 @@ module tb ();
   wire [15:0] acwire, drwire, irwire;
   wire [11:0] arwire, pcwire;
   wire [10:0] twire;
-  wire [7:0] display, socbidin, socbidut, socbiden;
+  wire [7:0] display, spireg;
   wire ewire;
 
 `ifdef GL_TEST
@@ -121,6 +121,15 @@ module tb ();
   assign pcwire[9] = user_project.\cpu0.pc[9] ;
   assign pcwire[10] = user_project.\cpu0.pc[10] ;
   assign pcwire[11] = user_project.\cpu0.pc[11] ;
+
+  assign spireg[0] = user_project.\spi0.datareg[0] ;
+  assign spireg[1] = user_project.\spi0.datareg[1] ;
+  assign spireg[2] = user_project.\spi0.datareg[2] ;
+  assign spireg[3] = user_project.\spi0.datareg[3] ;
+  assign spireg[4] = user_project.\spi0.datareg[4] ;
+  assign spireg[5] = user_project.\spi0.datareg[5] ;
+  assign spireg[6] = user_project.\spi0.datareg[6] ;
+  assign spireg[7] = user_project.\spi0.datareg[7] ;
 `else
   assign arwire = user_project.cpu0.addr;
   assign ewire = user_project.cpu0.e;
@@ -129,6 +138,7 @@ module tb ();
   assign drwire = user_project.cpu0.dr;
   assign pcwire = user_project.cpu0.pc;
   assign irwire = user_project.cpu0.ir;
+  assign spireg = user_project.spi0.datareg;
 `endif
 
   assign uio_in = {1'b0, 1'b0, 1'b0, 1'b0, 1'b0, spcsin, spin, intrin};

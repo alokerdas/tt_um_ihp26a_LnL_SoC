@@ -43,15 +43,7 @@ module cpu (
       display = ac[7:0];
 	end
   end
-/*
-  always @(posedge clk or posedge rst) begin
-    if (rst) begin
-		display <= 0;
-	end else if (en_out) begin
-		display <= ac[7:0];
-	end
-  end
-	*/
+
   // Converted to sync reset to avoid loop errors
   always @(posedge clk) begin
     if (rstT) begin

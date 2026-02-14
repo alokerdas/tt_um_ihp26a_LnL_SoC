@@ -204,11 +204,8 @@ async def test_spi (dut):
     dut.ui_in.value = 119 # This is needed for next INP
     await ClockCycles(dut.clk, 23)
     assert dut.irwire.value == 12432
-    await ClockCycles(dut.clk, 1)
-    assert dut.user_project.en_to_spi.value == 1
-    assert dut.user_project.load_spi.value == 1
-    assert dut.user_project.data_to_dev.value == 136
-    await ClockCycles(dut.clk, 1)
+    await ClockCycles(dut.clk, 2)
+    assert dut.spireg.value == 136
     assert dut.uio_out.value == 40
     await ClockCycles(dut.clk, 1)
     assert dut.uio_out.value == 0
