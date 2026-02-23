@@ -15,7 +15,7 @@ async def test_cpu (dut):
 
     dut._log.info("Testing reset")
     dut.rst_n.value = 0
-    dut.intrin.value = 0
+    dut.uio_in.value = 0
     await ClockCycles(dut.clk, 3)
     assert dut.ewire.value == 0
     assert dut.twire.value == 1
@@ -62,8 +62,11 @@ async def test_cpu (dut):
     assert dut.irwire.value == 62464
     await ClockCycles(dut.clk, 1)
     assert dut.uo_out.value == 136
+    dut._log.info("Testing STA to SPI")
+    await ClockCycles(dut.clk, 5)
+    assert dut.irwire.value == 12432
     dut._log.info("Testing SPA")
-    await ClockCycles(dut.clk, 10)
+    await ClockCycles(dut.clk, 5)
     assert dut.irwire.value == 28688
     dut._log.info("Testing LDA")
     await ClockCycles(dut.clk, 5)
@@ -121,13 +124,11 @@ async def test_cpu (dut):
     assert dut.irwire.value == 28736
     await ClockCycles(dut.clk, 1)
     assert dut.acwire.value == 65510
-    dut._log.info("Testing OUT")
+    dut._log.info("Testing STA to timer")
     await ClockCycles(dut.clk, 5)
-    assert dut.irwire.value == 62464
-    await ClockCycles(dut.clk, 1)
-    assert dut.uo_out.value == 230
+    assert dut.irwire.value == 12320
     dut._log.info("Testing INC")
-    await ClockCycles(dut.clk, 4)
+    await ClockCycles(dut.clk, 6)
     assert dut.irwire.value == 28704
     await ClockCycles(dut.clk, 1)
     assert dut.acwire.value == 65511
@@ -142,13 +143,11 @@ async def test_cpu (dut):
     assert dut.irwire.value == 28736
     await ClockCycles(dut.clk, 1)
     assert dut.acwire.value == 65487
-    dut._log.info("Testing OUT")
+    dut._log.info("Testing STA to pwm")
     await ClockCycles(dut.clk, 5)
-    assert dut.irwire.value == 62464
-    await ClockCycles(dut.clk, 1)
-    assert dut.uo_out.value == 207
+    assert dut.irwire.value == 12352
     dut._log.info("Testing BSA")
-    await ClockCycles(dut.clk, 4)
+    await ClockCycles(dut.clk, 6)
     assert dut.irwire.value == 20510
     await ClockCycles(dut.clk, 1)
     assert dut.arwire.value == 30
@@ -221,3 +220,103 @@ async def test_spi (dut):
     assert dut.uio_out.value == 8
     await ClockCycles(dut.clk, 1)
     assert dut.uio_out.value == 0
+
+@cocotb.test()
+async def test_pwm (dut):
+    dut._log.info("Start")
+
+    # Set the clock period to 10 us (100 KHz)
+    clock = Clock(dut.clk, 10, units="us")
+    cocotb.start_soon(clock.start())
+
+    dut._log.info("Testing reset")
+    dut.rst_n.value = 0
+    dut.intrin.value = 0
+    await ClockCycles(dut.clk, 3)
+    assert dut.ewire.value == 0
+    assert dut.twire.value == 1
+    assert dut.acwire.value == 0
+    assert dut.arwire.value == 0
+    assert dut.drwire.value == 0
+    assert dut.irwire.value == 0
+    assert dut.pcwire.value == 0
+
+    await ClockCycles(dut.clk, 1)
+    dut.rst_n.value = 1
+    await ClockCycles(dut.clk, 1)
+    assert dut.uio_oe.value == 252
+    dut._log.info("Testing PWM LOAD")
+    dut._log.info("Testing Initial")
+    await ClockCycles(dut.clk, 1)
+    assert dut.irwire.value == 0
+    await ClockCycles(dut.clk, 8)
+    dut.intrin.value = 1 # This is needed for next SKI
+    await ClockCycles(dut.clk, 8)
+    dut.ui_in.value = 119 # This is needed for next INP
+    await ClockCycles(dut.clk, 137)
+    assert dut.irwire.value == 12352
+    await ClockCycles(dut.clk, 2)
+    assert dut.pwmreg.value == 7
+    assert dut.uio_out.value == 16
+    await ClockCycles(dut.clk, 6)
+    assert dut.uio_out.value == 20
+    await ClockCycles(dut.clk, 1)
+    assert dut.uio_out.value == 20
+    await ClockCycles(dut.clk, 1)
+    assert dut.uio_out.value == 20
+    await ClockCycles(dut.clk, 1)
+    assert dut.uio_out.value == 20
+    await ClockCycles(dut.clk, 1)
+    assert dut.uio_out.value == 20
+    await ClockCycles(dut.clk, 1)
+    assert dut.uio_out.value == 20
+    await ClockCycles(dut.clk, 1)
+    assert dut.uio_out.value == 20
+    await ClockCycles(dut.clk, 1)
+    assert dut.uio_out.value == 16
+    await ClockCycles(dut.clk, 1)
+    assert dut.uio_out.value == 20
+
+@cocotb.test()
+async def test_timer (dut):
+    dut._log.info("Start")
+
+    # Set the clock period to 10 us (100 KHz)
+    clock = Clock(dut.clk, 10, units="us")
+    cocotb.start_soon(clock.start())
+
+    dut._log.info("Testing reset")
+    dut.rst_n.value = 0
+    dut.intrin.value = 0
+    await ClockCycles(dut.clk, 3)
+    assert dut.ewire.value == 0
+    assert dut.twire.value == 1
+    assert dut.acwire.value == 0
+    assert dut.arwire.value == 0
+    assert dut.drwire.value == 0
+    assert dut.irwire.value == 0
+    assert dut.pcwire.value == 0
+
+    await ClockCycles(dut.clk, 1)
+    dut.rst_n.value = 1
+    await ClockCycles(dut.clk, 1)
+    assert dut.uio_oe.value == 252
+    dut._log.info("Testing TIMER LOAD")
+    dut._log.info("Testing Initial")
+    await ClockCycles(dut.clk, 1)
+    assert dut.irwire.value == 0
+    await ClockCycles(dut.clk, 8)
+    dut.intrin.value = 1 # This is needed for next SKI
+    await ClockCycles(dut.clk, 8)
+    dut.ui_in.value = 119 # This is needed for next INP
+    await ClockCycles(dut.clk, 115)
+    assert dut.irwire.value == 12320
+    await ClockCycles(dut.clk, 2)
+    assert dut.timereg.value == 6
+    assert dut.uio_out.value == 16
+    await ClockCycles(dut.clk, 28)
+    assert dut.uio_out.value == 20
+    await ClockCycles(dut.clk, 32)
+    assert dut.uio_out.value == 28
+    await ClockCycles(dut.clk, 32)
+    assert dut.uio_out.value == 28

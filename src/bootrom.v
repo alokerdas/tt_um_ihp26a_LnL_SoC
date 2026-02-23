@@ -182,7 +182,7 @@ module bootrom (
   end
   always @ (posedge romclk or posedge rst) begin
     if (rst) begin
-      outbuf16 <= 16'hF400; // OUT
+      outbuf16 <= 16'h3020; // STA -> timer
     end else begin
       outbuf16 <= 16'h0000;
     end
@@ -210,7 +210,7 @@ module bootrom (
   end
   always @ (posedge romclk or posedge rst) begin
     if (rst) begin
-      outbuf1A <= 16'hF400; // OUT
+      outbuf1A <= 16'h3040; // STA -> pwm
     end else begin
       outbuf1A <= 16'h0000;
     end

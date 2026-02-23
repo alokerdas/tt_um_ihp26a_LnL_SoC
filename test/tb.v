@@ -23,11 +23,12 @@ module tb ();
   wire [7:0] uio_out;
   wire [7:0] uio_oe;
 
-  reg intrin, spin, spcsin;
+  reg intrin;
   wire [15:0] acwire, drwire, irwire;
   wire [11:0] arwire, pcwire;
   wire [10:0] twire;
-  wire [7:0] display, spireg;
+  wire [7:0] spireg;
+  wire [2:0] timereg, pwmreg;
   wire ewire;
 
 `ifdef GL_TEST
@@ -130,6 +131,14 @@ module tb ();
   assign spireg[5] = user_project.\spi0.datareg[5] ;
   assign spireg[6] = user_project.\spi0.datareg[6] ;
   assign spireg[7] = user_project.\spi0.datareg[7] ;
+
+  assign timereg[0] = user_project.\T0.selreg[0] ;
+  assign timereg[1] = user_project.\T0.selreg[1] ;
+  assign timereg[2] = user_project.\T0.selreg[2] ;
+
+  assign pwmreg[0] = user_project.\P0.uptimelat[0] ;
+  assign pwmreg[1] = user_project.\P0.uptimelat[1] ;
+  assign pwmreg[2] = user_project.\P0.uptimelat[2] ;
 `else
   assign arwire = user_project.cpu0.addr;
   assign ewire = user_project.cpu0.e;
@@ -139,9 +148,11 @@ module tb ();
   assign pcwire = user_project.cpu0.pc;
   assign irwire = user_project.cpu0.ir;
   assign spireg = user_project.spi0.datareg;
+  assign timereg = user_project.T0.selreg;
+  assign pwmreg = user_project.P0.uptimelat;
 `endif
 
-  assign uio_in = {1'b0, 1'b0, 1'b0, 1'b0, 1'b0, spcsin, spin, intrin};
+  assign uio_in[0] = intrin;
 
   // Replace tt_um_example with your module name:
   tt_um_LnL_SoC user_project (
